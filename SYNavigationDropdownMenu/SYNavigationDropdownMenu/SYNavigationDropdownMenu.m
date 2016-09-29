@@ -184,11 +184,7 @@
     [super setSelected:selected];
     self.userInteractionEnabled = NO;
     [UIView animateWithDuration:self.animationDuration animations:^{
-        if (selected) {
-            self.imageView.transform = CGAffineTransformMakeRotation(M_PI);
-        } else {
-            self.imageView.transform = CGAffineTransformMakeRotation(0.0);
-        }
+        self.imageView.transform = CGAffineTransformMakeRotation(selected ? M_PI : 0.0);
     } completion:^(BOOL finished) {
         self.userInteractionEnabled = YES;
     }];
