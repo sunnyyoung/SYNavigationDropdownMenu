@@ -19,11 +19,18 @@
 
 @implementation SYNavigationDropdownMenu
 
-- (instancetype)initWithNavigationController:(UINavigationController *)navigationController {
+- (instancetype)init {
     self = [SYNavigationDropdownMenu buttonWithType:UIButtonTypeCustom];
     if (self) {
-        self.frame = navigationController.navigationBar.frame;
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    }
+    return self;
+}
+
+- (instancetype)initWithNavigationController:(UINavigationController *)navigationController {
+    self = [self init];
+    if (self) {
+        self.frame = navigationController.navigationBar.frame;
         self.navigationController = navigationController;
     }
     return self;
@@ -33,19 +40,10 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    [self.titleLabel setFont:self.titleFont];
-    [self setTitleColor:self.titleColor forState:UIControlStateNormal];
-    [self setImage:self.arrowImage forState:UIControlStateNormal];
-    [self setTitleEdgeInsets:UIEdgeInsetsMake(0.0, -CGRectGetWidth(self.imageView.frame), 0.0, CGRectGetWidth(self.imageView.frame) + self.arrowPadding)];
-    [self setImageEdgeInsets:UIEdgeInsetsMake(0.0, CGRectGetWidth(self.titleLabel.frame) + self.arrowPadding, 0.0, -CGRectGetWidth(self.titleLabel.frame))];
-    CGRect menuHeaderViewFrame = self.menuHeaderView.frame;
-    menuHeaderViewFrame.size.width = CGRectGetWidth(self.navigationController.navigationBar.frame);
-    menuHeaderViewFrame.size.height = self.cellHeight;
-    self.menuHeaderView.frame = menuHeaderViewFrame;
-    CGRect menuBackgroundViewFrame = [UIScreen mainScreen].bounds;
-    menuBackgroundViewFrame.origin.y += CGRectGetMaxY(self.navigationController.navigationBar.frame);
-    menuBackgroundViewFrame.size.height -= CGRectGetMaxY(self.navigationController.navigationBar.frame);
-    self.menuBackgroundView.frame = menuBackgroundViewFrame;
+    [self updateMenuImage];
+    [self updateMenuTitle];
+    [self updateMenuHeaderView];
+    [self updateMenuBackground];
 }
 
 - (CGSize)sizeThatFits:(CGSize)size {
@@ -56,9 +54,37 @@
     return CGSizeMake([super intrinsicContentSize].width + self.arrowPadding, [super intrinsicContentSize].height);
 }
 
+- (void)updateMenuImage {
+    [self setImage:self.arrowImage forState:UIControlStateNormal];
+    [self setImageEdgeInsets:UIEdgeInsetsMake(0.0, CGRectGetWidth(self.titleLabel.frame) + self.arrowPadding, 0.0, -CGRectGetWidth(self.titleLabel.frame))];
+}
+
+- (void)updateMenuTitle {
+    [self.titleLabel setFont:self.titleFont];
+    [self setTitleColor:self.titleColor forState:UIControlStateNormal];
+    [self setTitleEdgeInsets:UIEdgeInsetsMake(0.0, -CGRectGetWidth(self.imageView.frame), 0.0, CGRectGetWidth(self.imageView.frame) + self.arrowPadding)];
+}
+
+- (void)updateMenuHeaderView {
+    CGRect menuHeaderViewFrame = self.menuHeaderView.frame;
+    menuHeaderViewFrame.size.width = CGRectGetWidth(self.navigationController.navigationBar.frame);
+    menuHeaderViewFrame.size.height = self.cellHeight;
+    self.menuHeaderView.frame = menuHeaderViewFrame;
+    self.menuHeaderView.backgroundColor = self.cellBackgroundColor;
+}
+
+- (void)updateMenuBackground {
+    CGRect menuBackgroundViewFrame = [UIScreen mainScreen].bounds;
+    menuBackgroundViewFrame.origin.y += CGRectGetMaxY(self.navigationController.navigationBar.frame);
+    menuBackgroundViewFrame.size.height -= CGRectGetMaxY(self.navigationController.navigationBar.frame);
+    self.menuBackgroundView.frame = menuBackgroundViewFrame;
+}
+
+#pragma mark - ScrollView Delegate
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGRect menuHeaderViewFrame = self.menuHeaderView.frame;
-    menuHeaderViewFrame.size.height = MAX(0.0, self.cellHeight-scrollView.contentOffset.y);
+    menuHeaderViewFrame.size.height = MAX(0.0, -scrollView.contentOffset.y);
     self.menuHeaderView.frame = menuHeaderViewFrame;
 }
 
@@ -163,7 +189,6 @@
     if (_menuHeaderView == nil) {
         _menuHeaderView = [[UIView alloc] initWithFrame:CGRectZero];
         _menuHeaderView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        _menuHeaderView.backgroundColor = self.cellBackgroundColor;
         [self.menuBackgroundView addSubview:_menuHeaderView];
     }
     return _menuHeaderView;
