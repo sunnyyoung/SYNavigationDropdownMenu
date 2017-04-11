@@ -1,16 +1,16 @@
-#SYNavigationDropdownMenu
+# SYNavigationDropdownMenu
 
 A lightweight dropdown menu drops underneath navigation bar.
 
-##Screen Shot
+## Screen Shot
 
 ![](https://raw.githubusercontent.com/Sunnyyoung/SYNavigationDropdownMenu/master/Screenshot/ScreenShot.gif)
 
-##Requirments
+## Requirments
 
 1. iOS 7.0 and above.
 
-##Installation
+## Installation
 
 Recommended way
 
@@ -23,9 +23,9 @@ Manually way
 1. Dragging `SYNavigationDropdownMenu.h` and `SYNavigationDropdownMenu.m` to your project
 2. `#import "SYNavigationDropdownMenu.h"`
 
-##Quickstart
+## Quickstart
 
-###Setup the NavigationDropdownMenu
+### Setup the NavigationDropdownMenu
 
 ```objc
 SYNavigationDropdownMenu *menu = [[SYNavigationDropdownMenu alloc] initWithNavigationController:self.navigationController];
@@ -34,9 +34,9 @@ menu.delegate = self;
 self.navigationItem.titleView = menu;
 ```
 
-###Configure the NavigationDropdownMenu
+### Configure the NavigationDropdownMenu
 
-####Required
+#### Required
 
 **Return the title array for the NavigationDropdownMenu:**
 
@@ -46,7 +46,7 @@ self.navigationItem.titleView = menu;
 
 `- (void)navigationDropdownMenu:(SYNavigationDropdownMenu *)navigationDropdownMenu didSelectTitleAtIndex:(NSUInteger)index;`
 
-####Optional
+#### Optional
 
 **The font of the title text label:**
 
@@ -100,5 +100,5 @@ self.navigationItem.titleView = menu;
 
 `- (UIColor *)cellSelectionColorForNavigationDropdownMenu:(SYNavigationDropdownMenu *)navigationDropdownMenu;` - **Default is nil**
 
-##License
+## License
 The [MIT License](LICENSE).
